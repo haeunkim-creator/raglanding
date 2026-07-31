@@ -15,6 +15,9 @@ Push the **contents of this folder** to the repository root:
     assets/hero.mp4
     assets/hero-3panel.png
     assets/chunk-highlight.png
+    assets/pipeline-detail.png
+    assets/judge-metrics.png
+    assets/table-before-after.png
 
 Then in Vercel: **Framework Preset → Other**, leave Build Command empty, and set
 Output Directory to the repo root (or leave it empty). No build step is needed —
@@ -31,11 +34,13 @@ relative path. Keep the filenames and the `assets/` folder name as they are.
 ## Notes
 
 - Fonts load from Google Fonts and jsDelivr CDNs, so the deployed page needs a
-  network connection to render Archivo, IBM Plex Mono, and Pretendard. Without
-  it, system faces substitute.
+  network connection to render Archivo and Pretendard. Without it, system faces
+  substitute.
 - `assets/hero.mp4` is 17 MB. It is within Vercel's static file limits, but the
   first load on a slow connection will show the poster frame
   (`assets/hero-3panel.png`) until the video buffers. A 720p re-encode would cut
   this substantially.
-- Four image frames still render as labeled placeholders, and three figures
-  render as `[TO CONFIRM]`. See `DESIGN_HANDOFF.md` in the delivery folder.
+- All four screenshot frames are filled and no `[TO CONFIRM]` markers remain.
+- Not on the page, for lack of source data: dataset scale figures, licensing and
+  redistribution terms, security/compliance statements, a competitive benchmark,
+  and customer references. Each needs a real number or policy before it can ship.

@@ -10,7 +10,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
 <script src="./image-slot.js"></script>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1c1815"/><text x="50" y="50" font-family="Helvetica,Arial,sans-serif" font-size="34" font-weight="700" fill="#faf8f4" text-anchor="middle" dominant-baseline="central" letter-spacing="-1">Lucy</text><rect x="30" y="62" width="40" height="2" fill="#e28a68"/></svg></template>
@@ -18,14 +18,16 @@
 :root{
   --dark:#1c1815; --light:#faf8f4; --panel:#ffffff;
   --text:#2a2723; --text-2:#5c564e; --text-3:#6d675e;
+  /* muted at body size — semantic mute, not a caption. --text-3 stays caption-only. */
+  --text-muted:#6d675e;
   --accent:#b0492f;
-  --border:rgba(42,39,35,.13); --border-strong:rgba(42,39,35,.20); --border-btn:#8a8177;
+  --border:rgba(42,39,35,.13); --border-strong:rgba(42,39,35,.20); --border-btn:#8a8177; --border-btn-quiet:#948c83;
   --radius-sm:3px; --radius-md:6px; --btn-radius:6px;
   --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px; --space-6:24px;
   --space-8:32px; --space-10:40px; --space-12:48px; --space-16:64px;
   --space-20:80px; --space-24:96px; --space-30:120px;
   --font-sans:'Archivo',Helvetica,Arial,sans-serif;
-  --font-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --font-mono:'Pretendard Variable','Pretendard',-apple-system,system-ui,sans-serif;
   --font-num:'Pretendard Variable','Pretendard',-apple-system,system-ui,sans-serif;
   --container:1200px;
 }
@@ -39,8 +41,9 @@ a:hover{color:#8f3a23;text-decoration:underline}
 /* dark = 3 · 6 · 8 only */
 .dark{background:var(--dark);color:#ede8de;
   --text:#ede8de; --text-2:rgba(237,232,222,.74); --text-3:rgba(237,232,222,.56);
+  --text-muted:rgba(237,232,222,.56);
   --accent:#e28a68; --panel:rgba(237,232,222,.03);
-  --border:rgba(237,232,222,.13); --border-strong:rgba(237,232,222,.22); --border-btn:rgba(237,232,222,.44)}
+  --border:rgba(237,232,222,.13); --border-strong:rgba(237,232,222,.22); --border-btn:rgba(237,232,222,.44); --border-btn-quiet:rgba(237,232,222,.38)}
 .dark a:hover{color:#f0a689}
 
 .shot-frame{border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;background:var(--panel);box-shadow:0 1px 2px rgba(42,39,35,.04),0 14px 34px -20px rgba(42,39,35,.16)}
@@ -48,7 +51,8 @@ a:hover{color:#8f3a23;text-decoration:underline}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--border-strong)}
 
 .chip{display:inline-flex;align-items:center;font-family:var(--font-mono);white-space:nowrap;border-radius:var(--radius-sm)}
-.chip-primary{height:40px;padding:0 var(--space-4);font-size:16px;color:var(--accent);border:1px solid var(--border-strong)}
+.chip-primary{height:40px;padding:0 var(--space-4);font-size:16px;color:var(--accent);background:rgba(176,73,47,.06);border:1px solid rgba(176,73,47,.34)}
+.dark .chip-primary{background:rgba(226,138,104,.10);border-color:rgba(226,138,104,.38)}
 .chip-secondary{height:30px;padding:0 var(--space-3);font-size:13px;color:var(--text-3);border:1px solid var(--border)}
 .card ul li:last-child{border-bottom:none;padding-bottom:0}
 /* Proof: frames lead each column, so they align at the top by construction */
@@ -62,13 +66,30 @@ a:hover{color:#8f3a23;text-decoration:underline}
 
 @media (max-width:1023px){
   :root{--container:100%;--space-30:80px;--space-24:64px;--space-20:56px;--space-16:40px}
-  .nav-links,.nav-actions .btn-ghost{display:none!important}
+  .nav-links{display:none!important}
   .nav-toggle{display:inline-flex}
   .hero,.section-inner,.nav-inner{padding-left:var(--space-8)!important;padding-right:var(--space-8)!important}
-  .split,.section-head-split,.card-grid,.compare-grid{grid-template-columns:minmax(0,1fr)!important}
+  .split,.section-head-split,.compare-grid{grid-template-columns:minmax(0,1fr)!important}
+  .card-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .stack-cards .card-grid,.integration .card-grid{grid-template-columns:minmax(0,1fr)!important}
+  .fork-cards,.fork-layer{grid-template-columns:minmax(0,1fr)!important;gap:16px!important}
+  .inspect-media-row{grid-template-columns:minmax(0,1fr)!important;row-gap:32px}
+  .fork-bar{display:none!important}
+  .fork-split > span{left:50%!important}
+  .fork-underconn{display:none!important}
+  .hero-h1{font-size:48px!important}
+  /* hero flow: three zones stack; connectors rotate to point down */
+  .flow-diagram{grid-template-columns:1fr!important;grid-template-rows:auto 40px auto 40px auto!important;justify-items:center!important}
+  .flow-zone{align-items:center!important;text-align:center!important}
+  .flow-conn{flex-direction:column!important}
+  .flow-conn .conn-line{width:2px!important;height:24px!important}
+  .flow-conn .conn-head{margin-left:0!important;margin-top:-6px!important;transform:rotate(45deg)!important}
+  .flow-core{width:100%;max-width:520px}
+  .inspect-foot{flex-direction:column;align-items:flex-start!important}
   .step-list{grid-template-columns:minmax(0,1fr)!important}
   .step-card{padding:var(--space-8) 0!important;border-right:none!important}
-  .step-card + .step-card{border-top:1px solid var(--border-strong)}
+  .step-list > li[aria-hidden]{display:none!important}
+  .step-card ~ .step-card{border-top:1px solid var(--border-strong)}
   .card-wide{flex-direction:column!important;gap:var(--space-4)!important}
   .card-wide > h3{flex:0 0 auto!important}
   .footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:var(--space-8)!important}
@@ -88,12 +109,21 @@ a:hover{color:#8f3a23;text-decoration:underline}
   h1{font-size:36px!important;letter-spacing:-.025em!important}
   h2{font-size:27px!important}
   h3{font-size:20px!important}
-  .hero-sub{font-size:16px!important}
-  .turn-arrow span:first-child{height:72px!important}
-  .cta-row{flex-direction:column!important;align-items:stretch!important;width:100%}
+  .hero-h1{font-size:36px!important}
+  .sub-br{display:none}
+  .flow-core{padding:22px 18px!important}
+  .flow-stage{padding:40px 16px!important;border-radius:8px}
+  .flow-artifact{font-size:18px!important}
+  .flow-artifact-sub{white-space:normal!important;text-align:center}
+  .cta-row{flex-direction:column!important;align-items:stretch!important;width:100%;gap:12px!important}
   .cta-row .btn{width:100%;justify-content:center;flex:1 1 auto!important}
-  .fact-row{grid-template-columns:minmax(0,1fr)!important;gap:var(--space-2)!important}
+  .fact-row,.fact-list li{grid-template-columns:minmax(0,1fr)!important;gap:var(--space-2)!important}
+  .returns-grid{grid-template-columns:minmax(0,1fr)!important}
+  .returns-teaser{order:99}
+  .isnot-line{font-size:17px!important}
+  .fork-diagram > div[style*="dashed"]{padding:14px!important}
   .chip-primary{height:34px;padding:0 var(--space-3);font-size:14px}
+  .card-grid{grid-template-columns:minmax(0,1fr)!important}
   .card,.contrast{padding:var(--space-6)!important}
   .footer-bottom{flex-direction:column;align-items:flex-start!important;gap:var(--space-3)!important}
 }
@@ -109,13 +139,12 @@ a:hover{color:#8f3a23;text-decoration:underline}
         <span style="font-family:var(--font-mono);font-size:13px;color:var(--text-3);letter-spacing:.1em">DATA</span>
       </a>
       <nav class="nav-links" style="display:flex;align-items:center;gap:var(--space-8);font-size:15px">
-        <a href="#proof" style="color:var(--text-2)">Proof</a>
         <a href="#why-it-works" style="color:var(--text-2)">Why it works</a>
-        <a href="#what-you-can-ask" style="color:var(--text-2)">What you can ask</a>
+        <a href="#coverage" style="color:var(--text-2)">Coverage</a>
+        <a href="#what-lucy-returns" style="color:var(--text-2)">What Lucy returns</a>
         <a href="#integration" style="color:var(--text-2)">Integration</a>
       </nav>
       <div class="nav-actions" style="display:flex;align-items:center;gap:var(--space-3)">
-        <a href="https://rag-playground.lucydata.ai" class="btn btn-ghost" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:44px;padding:0 var(--space-4);font-size:15px;font-weight:500;color:var(--text-2)">Open the playground</a>
         <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="{{ navExpanded }}" aria-controls="nav-panel" onClick="{{ toggleNav }}"><span></span></button>
         <a href="/request-access" class="btn btn-primary" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:44px;padding:0 var(--space-5);font-size:15px;font-weight:500;background:var(--text);color:var(--light);border-radius:var(--btn-radius)" style-hover="opacity:.86"><span class="nav-cta-full">Request dataset access</span><span class="nav-cta-short">Request access</span></a>
       </div>
@@ -124,135 +153,105 @@ a:hover{color:#8f3a23;text-decoration:underline}
 
   <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
     <nav id="nav-panel" class="nav-panel">
-      <a href="#proof" onClick="{{ closeNav }}">Proof</a>
       <a href="#why-it-works" onClick="{{ closeNav }}">Why it works</a>
-      <a href="#what-you-can-ask" onClick="{{ closeNav }}">What you can ask</a>
+      <a href="#coverage" onClick="{{ closeNav }}">Coverage</a>
+      <a href="#what-lucy-returns" onClick="{{ closeNav }}">What Lucy returns</a>
       <a href="#integration" onClick="{{ closeNav }}">Integration</a>
-      <a href="https://rag-playground.lucydata.ai" onClick="{{ closeNav }}">Open the playground</a>
+      <a href="https://rag-playground.lucydata.ai" onClick="{{ closeNav }}">Inspect Chunks</a>
     </nav>
   </sc-if>
 
-  <section class="hero" style="padding:var(--space-30) var(--space-12) var(--space-24)">
-    <div style="max-width:var(--container);margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center">
-      <p class="eyebrow" style="margin:0 0 var(--space-6);font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">SEC filing data for AI systems</p>
-      <h1 style="margin:0;max-width:940px;font-size:64px;line-height:1.03;letter-spacing:-.035em;font-weight:700">Financial answers your team can actually check.</h1>
-      <p class="hero-sub" style="margin:var(--space-6) 0 0;max-width:680px;font-size:18px;line-height:1.65;color:var(--text-2)">Lucy turns SEC filings into structured, source-linked data — and shows the full path from question to answer, so every statement resolves to the filing text behind it.</p>
-      <div class="cta-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-3);margin-top:var(--space-10)">
-        <a href="https://rag-playground.lucydata.ai" class="btn btn-secondary" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:52px;padding:0 var(--space-8);font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border-btn);border-radius:var(--btn-radius)" style-hover="background:rgba(42,39,35,.04)">Open the playground</a>
-        <a href="/request-access" class="btn btn-primary" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:52px;padding:0 var(--space-8);font-size:16px;font-weight:500;background:var(--text);color:var(--light);border-radius:var(--btn-radius)" style-hover="opacity:.86">Request dataset access</a>
-      </div>
-      <sc-if value="{{ showMetaRow }}" hint-placeholder-val="{{ true }}">
-        <p class="hero-meta" style="margin:var(--space-8) 0 0;font-family:var(--font-mono);font-size:13px;line-height:1.7;color:var(--text-3)">Ten years of filings · item-level chunks · every claim traceable</p>
-      </sc-if>
-
-      <figure class="shot" style="width:100%;margin:var(--space-16) 0 0">
-        <div class="shot-frame">
-          <sc-if value="{{ showBrowserChrome }}" hint-placeholder-val="{{ true }}">
-            <div class="shot-bar">
-              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-              <span style="margin-left:var(--space-3);font-family:var(--font-mono);font-size:13px;color:var(--text-3)">rag-playground.lucydata.ai</span>
-            </div>
-          </sc-if>
-          <div class="shot-media" style="position:relative;width:100%;aspect-ratio:1904/1080;background:var(--panel)">
-            <video ref="{{ heroVideoRef }}" src="./assets/hero.mp4" poster="./assets/hero-3panel.png" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" preload="metadata" aria-label="Lucy playground: a question is asked, the pipeline runs, chunks are retrieved, and the answer is scored" style="display:block;width:100%;height:100%;object-fit:cover"></video>
-          </div>
+  <section class="hero" style="padding:var(--space-24) var(--space-12) 0">
+    <div style="max-width:var(--container);margin:0 auto;display:flex;flex-direction:column;align-items:center">
+      <div class="hero-copy" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+        <p class="eyebrow" style="margin:0 0 16px;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent)">SEC &amp; DART data infrastructure for LLM / RAG</p>
+        <h1 class="hero-h1" style="margin:0;font-size:56px;line-height:1.08;letter-spacing:-.03em;font-weight:800">The source-of-truth<br><span style="color:var(--accent)">retrieval layer for financial AI.</span></h1>
+        <p class="hero-claim" style="margin:14px 0 0;font-size:18px;line-height:1.4;letter-spacing:-.01em;font-weight:600;color:var(--text-2)">Lucy does not generate answers.</p>
+        <p class="hero-sub" style="margin:14px auto 0;max-width:620px;font-size:15px;line-height:1.65;color:var(--text-2)">Lucy preprocesses SEC and DART filings into structured, source-linked chunks —<br class="sub-br">and stops before generation, so your LLM answers with the right source.</p>
+        <div class="cta-row" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;margin-top:44px">
+            <a href="/request-access" class="btn" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:48px;padding:0 var(--space-6);font-size:15px;font-weight:500;border-radius:6px;background:var(--dark);color:var(--light)" style-hover="opacity:.86">Request dataset access</a>
+            <a href="https://rag-playground.lucydata.ai" class="btn" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:48px;padding:0 var(--space-6);font-size:15px;font-weight:500;border-radius:6px;background:transparent;color:var(--text);border:1.5px solid var(--border-btn)" style-hover="background:rgba(42,39,35,.04)">Inspect Chunks in Playground</a>
+            <a href="#integration" class="btn" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:48px;padding:0 var(--space-6);font-size:15px;font-weight:500;border-radius:6px;background:transparent;color:var(--text-2);border:1px solid var(--border-btn-quiet)" style-hover="background:rgba(42,39,35,.04)">View API / MCP docs</a>
         </div>
-        <figcaption style="margin-top:var(--space-4);text-align:center;font-family:var(--font-mono);font-size:13px;line-height:1.5;color:var(--text-3)">Question, retrieval, answer, and score — in one view.</figcaption>
-      </figure>
+        <sc-if value="{{ showMetaRow }}" hint-placeholder-val="{{ true }}">
+          <p class="hero-meta" style="margin:var(--space-8) 0 0;font-family:var(--font-mono);font-size:13px;line-height:1.7;color:var(--text-3)">Ten years of filings · item-level chunks · every claim traceable</p>
+        </sc-if>
+      </div>
+
+      <div class="flow-stage" style="width:100%;max-width:calc(var(--container) - 96px);margin:88px auto 0;padding:64px 56px;background:#f3efe7;border-radius:12px">
+      <div class="flow-diagram" style="display:grid;grid-template-columns:minmax(0,1fr) 112px minmax(360px,1.6fr) 112px minmax(0,1fr);align-items:center;justify-content:center;gap:0;width:100%;max-width:1100px;margin:0 auto">
+        <div class="flow-zone" style="display:flex;flex-direction:column;align-items:flex-end;text-align:right">
+          <span style="font-family:var(--font-mono);font-size:14px;line-height:1.7;white-space:nowrap;color:var(--text-3)">Raw SEC / DART filings</span>
+        </div>
+        <div class="flow-conn" aria-hidden="true" style="display:flex;align-items:center;justify-content:center;color:var(--accent)">
+          <span class="conn-line" style="display:block;flex:0 0 auto;width:32px;height:2px;background:currentColor"></span>
+          <span class="conn-head" style="display:block;flex:0 0 auto;width:9px;height:9px;margin-left:-6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg)"></span>
+        </div>
+        <div class="flow-core" style="padding:28px 40px;border-radius:6px;background:var(--dark);display:flex;flex-direction:column;align-items:center">
+          <span class="flow-label" style="align-self:flex-start;display:flex;align-items:center;gap:8px;margin-bottom:18px;font-family:var(--font-mono);font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#e28a68"><span aria-hidden="true" style="display:block;flex:0 0 auto;width:6px;height:6px;background:#e28a68"></span>Lucy</span>
+          <div style="display:flex;align-items:center;justify-content:center;width:100%;height:38px;border:1px solid rgba(237,232,222,.28);border-radius:4px;font-family:var(--font-mono);font-size:13px;letter-spacing:.02em;white-space:nowrap;color:rgba(237,232,222,.72)">Preprocessing</div>
+          <div aria-hidden="true" style="display:flex;justify-content:center;margin:12px 0"><span style="display:block;width:1.5px;height:20px;background:#e28a68"></span></div>
+          <div class="flow-artifact-box" style="display:flex;flex-direction:column;align-items:center;width:100%;padding:12px 20px;border:1px solid #e28a68;border-radius:4px;background:rgba(226,138,104,.14)">
+            <span class="flow-artifact" style="font-family:var(--font-mono);font-size:21px;letter-spacing:-.01em;white-space:nowrap;color:#e28a68">item-level chunks</span>
+            <span class="flow-artifact-sub" style="margin-top:6px;font-family:var(--font-mono);font-size:13px;letter-spacing:.03em;color:rgba(226,138,104,.75)">table JSON · XBRL · metadata · graph links</span>
+          </div>
+          <div aria-hidden="true" style="display:flex;justify-content:center;margin:12px 0"><span style="display:block;width:1.5px;height:20px;background:#e28a68"></span></div>
+          <div style="display:flex;align-items:center;justify-content:center;width:100%;height:38px;background:#e28a68;border-radius:4px;font-family:var(--font-mono);font-size:13px;font-weight:600;letter-spacing:.02em;white-space:nowrap;color:var(--dark)">Vector &amp; Graph Retrieval</div>
+        </div>
+        <div class="flow-conn" aria-hidden="true" style="display:flex;align-items:center;justify-content:center;color:var(--accent)">
+          <span class="conn-line" style="display:block;flex:0 0 auto;width:32px;height:2px;background:currentColor"></span>
+          <span class="conn-head" style="display:block;flex:0 0 auto;width:9px;height:9px;margin-left:-6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg)"></span>
+        </div>
+        <div class="flow-zone" style="display:flex;flex-direction:column;align-items:flex-start;text-align:left">
+          <span style="font-family:var(--font-mono);font-size:14px;line-height:1.7;white-space:nowrap;color:var(--text-3)">your LLM · agent · search product</span>
+        </div>
+      </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="what-lucy-is-not" id="what-lucy-is-not">
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:96px var(--space-12) var(--space-30)">
+      <p class="eyebrow" style="margin:0 0 16px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">What Lucy is not</p>
+      <h2 style="margin:0 0 14px;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Lucy is upstream of all four.</h2>
+      <p style="margin:0 0 48px;font-size:16px;line-height:1.6;color:var(--text-2)">It supplies the filing evidence they answer from.</p>
+
+      <div style="border-top:1px solid var(--border)">
+        <p class="isnot-line" style="margin:0;padding:22px 0;border-bottom:1px solid var(--border);font-size:19px;line-height:1.6;letter-spacing:-.01em"><span style="font-weight:400;color:var(--text-3)">Not a chatbot — </span><span style="font-weight:600;color:var(--text)">a retrieval layer your product calls.</span></p>
+        <p class="isnot-line" style="margin:0;padding:22px 0;border-bottom:1px solid var(--border);font-size:19px;line-height:1.6;letter-spacing:-.01em"><span style="font-weight:400;color:var(--text-3)">Not an answer engine — </span><span style="font-weight:600;color:var(--text)">retrieval-ready chunks your LLM answers from.</span></p>
+        <p class="isnot-line" style="margin:0;padding:22px 0;border-bottom:1px solid var(--border);font-size:19px;line-height:1.6;letter-spacing:-.01em"><span style="font-weight:400;color:var(--text-3)">Not a terminal — </span><span style="font-weight:600;color:var(--text)">structured filing data your systems consume.</span></p>
+        <p class="isnot-line" style="margin:0;padding:22px 0;border-bottom:1px solid var(--border);font-size:19px;line-height:1.6;letter-spacing:-.01em"><span style="font-weight:400;color:var(--text-3)">Not a generation layer — </span><span style="font-weight:600;color:var(--text)">chunks, scores, and references.</span><span style="font-weight:600;color:var(--accent)"> Your LLM composes the final answer.</span></p>
+      </div>
+
     </div>
   </section>
 
   <section class="problem dark" id="problem">
-    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-30) var(--space-12) var(--space-8)">
-      <div class="section-head-split" style="display:grid;grid-template-columns:minmax(320px,1fr) minmax(320px,1fr);gap:var(--space-16);align-items:start">
-        <div>
-          <p class="eyebrow" style="margin:0 0 var(--space-5);font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">The problem</p>
-          <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Nobody can tell you where a financial answer came from.</h2>
-        </div>
-        <p style="margin:0;font-size:17px;line-height:1.7;color:var(--text-2)">A model reads a filing, flattens the tables, loses the footnote that qualified the number, and produces a confident paragraph. The output looks right. Nobody downstream can check it, and in financial work an unverifiable answer is not a usable one.</p>
-      </div>
-      <div class="turn-arrow" aria-hidden="true" style="display:flex;flex-direction:column;align-items:center;margin:var(--space-16) 0 0">
-        <span style="display:block;width:1px;height:120px;background:var(--accent)"></span>
-        <span style="display:block;width:9px;height:9px;margin-top:-5px;border-right:1px solid var(--accent);border-bottom:1px solid var(--accent);transform:rotate(45deg)"></span>
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-24) var(--space-12)">
+      <p class="eyebrow" style="margin:0 0 20px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">The problem</p>
+      <div class="section-head-split" style="display:grid;grid-template-columns:1fr 1fr;column-gap:96px;align-items:start;margin-bottom:64px">
+        <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Most financial RAG failure starts before retrieval.</h2>
+        <p style="margin:0;max-width:520px;font-size:16px;line-height:1.65;color:var(--text-2)">A model reads a filing, flattens the tables, loses the footnote that qualified the number, and produces a confident paragraph. The output looks right. Nobody downstream can check it, and in financial work an unverifiable answer is not a usable one. The failure happened upstream, in how the document was read.</p>
       </div>
     </div>
   </section>
 
-  <section class="proof dark" id="proof">
-    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-8) var(--space-12) var(--space-30)">
-      <div class="section-head-split" style="display:grid;grid-template-columns:minmax(320px,1fr) minmax(320px,1fr);gap:var(--space-16);align-items:end;margin-bottom:var(--space-16)">
-        <div>
-          <p class="eyebrow" style="margin:0 0 var(--space-5);font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">Proof</p>
-          <h2 style="margin:0;font-size:44px;line-height:1.1;letter-spacing:-.03em;font-weight:700">Every step is on the screen while it runs.</h2>
-        </div>
-        <p style="margin:0;font-size:17px;line-height:1.7;color:var(--text-2)">Lucy answers from retrieved filing text and shows the whole path as it happens — the stages that ran, every chunk that came back, the passage each statement rests on, and a score on whether the answer is actually supported by it.</p>
-      </div>
-
-      <ol class="step-list" style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-strong)">
-        <li class="step-card" style="padding:var(--space-10) var(--space-8) var(--space-8) 0;border-right:1px solid var(--border-strong)">
-          <figure class="shot" style="margin:0 0 var(--space-6)">
-            <div class="shot-frame" style="border-color:rgba(237,232,222,.22);box-shadow:none">
-              <div class="shot-media" style="position:relative;width:100%;aspect-ratio:4/3">
-                <image-slot id="proof-pipeline" shape="rect" fit="cover" placeholder="pipeline-detail.png — pipeline graph with stages lit in sequence"></image-slot>
-              </div>
-            </div>
-          </figure>
-          <span style="font-family:var(--font-num);font-size:15px;font-weight:600;letter-spacing:.06em;color:var(--accent)">01</span>
-          <h3 style="margin:var(--space-4) 0 var(--space-4);font-size:22px;font-weight:600;letter-spacing:-.02em">The path</h3>
-          <p style="margin:0;padding-right:var(--space-4);font-size:16px;line-height:1.65;color:var(--text-2)">Pipeline Graph and Trace Log show the route the question took and every chunk that was retrieved, as it runs rather than after the fact.</p>
-        </li>
-        <li class="step-card" style="padding:var(--space-10) var(--space-4) var(--space-8);border-right:1px solid var(--border-strong)">
-          <figure class="shot" style="margin:0 0 var(--space-6)">
-            <div class="shot-frame" style="border-color:rgba(237,232,222,.22);box-shadow:none">
-              <div class="shot-media" style="position:relative;width:100%;aspect-ratio:4/3">
-                <image-slot id="proof-source" shape="rect" fit="cover" placeholder="chunk-highlight.png — retrieved chunk with the supporting passage highlighted"></image-slot>
-              </div>
-            </div>
-          </figure>
-          <span style="font-family:var(--font-num);font-size:15px;font-weight:600;letter-spacing:.06em;color:var(--accent)">02</span>
-          <h3 style="margin:var(--space-4) 0 var(--space-4);font-size:22px;font-weight:600;letter-spacing:-.02em">The source</h3>
-          <p style="margin:0;padding-right:var(--space-4);font-size:16px;line-height:1.65;color:var(--text-2)">The passage an answer rests on is highlighted where it sits in the filing. No opening EDGAR, no downloading anything.</p>
-        </li>
-        <li class="step-card" style="padding:var(--space-10) 0 var(--space-8) var(--space-8)">
-          <figure class="shot" style="margin:0 0 var(--space-6)">
-            <div class="shot-frame" style="border-color:rgba(237,232,222,.22);box-shadow:none">
-              <div class="shot-media" style="position:relative;width:100%;aspect-ratio:4/3">
-                <image-slot id="proof-score" shape="rect" fit="cover" placeholder="judge-metrics.png — the three judge scores as reported per response"></image-slot>
-              </div>
-            </div>
-          </figure>
-          <span style="font-family:var(--font-num);font-size:15px;font-weight:600;letter-spacing:.06em;color:var(--accent)">03</span>
-          <h3 style="margin:var(--space-5) 0 var(--space-4);font-size:22px;font-weight:600;letter-spacing:-.02em">The score</h3>
-          <p style="margin:0;font-size:16px;line-height:1.65;color:var(--text-2)">An LLM judge runs on each response in real time.</p>
-          <ul style="list-style:none;margin:var(--space-6) 0 0;padding:0;border-top:1px solid var(--border)">
-            <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:15px;line-height:1.5;color:var(--text-2)"><span style="display:block;margin-bottom:var(--space-2);font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Relevance</span>How well the answer corresponds to the question.</li>
-            <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:15px;line-height:1.5;color:var(--text-2)"><span style="display:block;margin-bottom:var(--space-2);font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Retrieval Relevance</span>How well the retrieved chunks correspond to it.</li>
-            <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:15px;line-height:1.5;color:var(--text-2)"><span style="display:block;margin-bottom:var(--space-2);font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Groundedness</span>Whether the response is factually supported by the source context; in effect, hallucination detection.</li>
-          </ul>
-        </li>
-      </ol>
-
-      <p style="margin:var(--space-12) 0 0;padding-top:var(--space-6);border-top:1px solid var(--border);max-width:760px;font-size:16px;line-height:1.6;color:var(--text-2)">Loaded chunks are also browsable on their own — filtered by filing item, as text or table units.</p>
-    </div>
-  </section>
-
-  <section class="why-it-works" id="why-it-works" style="border-top:1px solid var(--border)">
-    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-30) var(--space-12)">
-      <div class="section-head-split" style="display:grid;grid-template-columns:minmax(320px,1fr) minmax(320px,1fr);gap:var(--space-16);align-items:end;margin-bottom:var(--space-16)">
-        <div>
-          <p class="eyebrow" style="margin:0 0 var(--space-5);font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">Why it works</p>
-          <h2 style="margin:0;font-size:44px;line-height:1.1;letter-spacing:-.03em;font-weight:700">EDGAR is free. Making it retrievable is not.</h2>
-        </div>
-        <p style="margin:0;font-size:17px;line-height:1.7;color:var(--text-2)">Pulling filings is the easy part. The difficulty is everything that happens before retrieval — and it is where most financial RAG quietly breaks.</p>
+  <section class="why-it-works" id="why-it-works">
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-30) var(--space-12) var(--space-16)">
+      <p class="eyebrow" style="margin:0 0 20px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">Why it works</p>
+      <div class="section-head-split" style="display:grid;grid-template-columns:1fr 1fr;column-gap:96px;align-items:start;margin-bottom:64px">
+        <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Preprocessing determines retrieval quality.</h2>
+        <p style="margin:0;max-width:520px;font-size:16px;line-height:1.65;color:var(--text-2)">EDGAR is free. Making it retrievable is not. Pulling filings is the easy part — the difficulty is everything that happens before retrieval.</p>
       </div>
 
       <figure class="shot" style="max-width:800px;margin:0 auto var(--space-10)">
         <div class="shot-frame">
           <div class="shot-media" style="position:relative;width:100%;aspect-ratio:16/9">
-            <image-slot id="why-table-before-after" shape="rect" fit="cover" placeholder="table-before-after.png — a merged-cell table from a 10-K, flattened on the left and structured as JSON on the right"></image-slot>
+            <img src="./assets/table-before-after.png" alt="The revenue disaggregation table from Astera Labs' 10-K, shown as rendered in the SEC filing and as Lucy's table chunk with XBRL tags." style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
           </div>
         </div>
-        <figcaption style="margin-top:var(--space-4);text-align:center;font-family:var(--font-mono);font-size:13px;line-height:1.5;color:var(--text-3)">Row and column headers survive as structure.</figcaption>
+        <figcaption style="margin-top:var(--space-4);text-align:center;font-family:var(--font-mono);font-size:13px;line-height:1.5;color:var(--text-3)">Astera Labs 10-K, Item 8 — row and column headers survive as structure, tagged to us-gaap concepts.</figcaption>
       </figure>
 
       <div class="compare-grid" style="display:grid;grid-template-columns:0.74fr 1.26fr;gap:var(--space-5);align-items:center">
@@ -302,75 +301,75 @@ a:hover{color:#8f3a23;text-decoration:underline}
           </ul>
         </article>
         <article class="card dark" style="padding:var(--space-8);border:1px solid var(--dark);border-radius:var(--radius-md)">
-          <p style="margin:0 0 var(--space-4);padding-bottom:var(--space-3);border-bottom:1px solid var(--border-strong);font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)">What Lucy does</p>
+          <p style="margin:0 0 var(--space-4);padding-bottom:var(--space-3);border-bottom:1px solid var(--border-strong);font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600">What Lucy does</p>
           <ul style="list-style:none;margin:0;padding:0">
           <li style="display:flex;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)">
             <span style="flex:0 0 auto;width:24px;font-family:var(--font-num);font-size:13px;font-weight:600;line-height:1.5;color:var(--text-3)">01</span>
             <div>
-              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Item-level separation</p>
+              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">Item-level separation</p>
               <p style="margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--text)">Body text is split by filing item, so chunk boundaries follow the document's own structure.</p>
             </div>
           </li>
           <li style="display:flex;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)">
             <span style="flex:0 0 auto;width:24px;font-family:var(--font-num);font-size:13px;font-weight:600;line-height:1.5;color:var(--text-3)">02</span>
             <div>
-              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Document metadata</p>
+              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">Document metadata</p>
               <p style="margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--text)">Metadata ships with every chunk for search and filtering.</p>
             </div>
           </li>
           <li style="display:flex;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)">
             <span style="flex:0 0 auto;width:24px;font-family:var(--font-num);font-size:13px;font-weight:600;line-height:1.5;color:var(--text-3)">03</span>
             <div>
-              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Summaries</p>
+              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">Summaries</p>
               <p style="margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--text)">Item-level and document-level summaries are generated alongside the source text.</p>
             </div>
           </li>
           <li style="display:flex;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)">
             <span style="flex:0 0 auto;width:24px;font-family:var(--font-num);font-size:13px;font-weight:600;line-height:1.5;color:var(--text-3)">04</span>
             <div>
-              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Table structure</p>
+              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">Table structure</p>
               <p style="margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--text)">Tables are structured as JSON. Irregular layouts, including merged cells, are recognized rather than flattened.</p>
             </div>
           </li>
           <li style="display:flex;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)">
             <span style="flex:0 0 auto;width:24px;font-family:var(--font-num);font-size:13px;font-weight:600;line-height:1.5;color:var(--text-3)">05</span>
             <div>
-              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Reference resolution</p>
+              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">Reference resolution</p>
               <p style="margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--text)">Internal and external references carry the information needed to reach the referenced document.</p>
             </div>
           </li>
           <li style="display:flex;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)">
             <span style="flex:0 0 auto;width:24px;font-family:var(--font-num);font-size:13px;font-weight:600;line-height:1.5;color:var(--text-3)">06</span>
             <div>
-              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Images</p>
+              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">Images</p>
               <p style="margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--text)">Image content is described, not discarded.</p>
             </div>
           </li>
           <li style="display:flex;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)">
             <span style="flex:0 0 auto;width:24px;font-family:var(--font-num);font-size:13px;font-weight:600;line-height:1.5;color:var(--text-3)">07</span>
             <div>
-              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">XBRL</p>
+              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">XBRL</p>
               <p style="margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--text)">Figures in the financial statements carry their XBRL information.</p>
             </div>
           </li>
           <li style="display:flex;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)">
             <span style="flex:0 0 auto;width:24px;font-family:var(--font-num);font-size:13px;font-weight:600;line-height:1.5;color:var(--text-3)">08</span>
             <div>
-              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Attachments</p>
+              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">Attachments</p>
               <p style="margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--text)">Exhibits and financial statements attached to the filing are provided.</p>
             </div>
           </li>
           <li style="display:flex;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)">
             <span style="flex:0 0 auto;width:24px;font-family:var(--font-num);font-size:13px;font-weight:600;line-height:1.5;color:var(--text-3)">09</span>
             <div>
-              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Boilerplate handling</p>
+              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">Boilerplate handling</p>
               <p style="margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--text)">Cover pages, signature blocks, and similar non-content are separated out.</p>
             </div>
           </li>
           <li style="display:flex;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)">
             <span style="flex:0 0 auto;width:24px;font-family:var(--font-num);font-size:13px;font-weight:600;line-height:1.5;color:var(--text-3)">10</span>
             <div>
-              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">QA</p>
+              <p style="margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">QA</p>
               <p style="margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--text)">Data quality is maintained through a review pass on the output.</p>
             </div>
           </li>
@@ -381,68 +380,13 @@ a:hover{color:#8f3a23;text-decoration:underline}
     </div>
   </section>
 
-  <section class="what-you-can-ask" id="what-you-can-ask">
-    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-24) var(--space-12)">
+  <section class="coverage" id="coverage">
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-16) var(--space-12) var(--space-24)">
       <div class="section-head-split" style="display:grid;grid-template-columns:minmax(320px,1fr) minmax(320px,1fr);gap:var(--space-16);align-items:end;margin-bottom:var(--space-12)">
         <div>
-          <p class="eyebrow" style="margin:0 0 var(--space-5);font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">What you can ask</p>
-          <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Two kinds of question, one retrieval surface.</h2>
-        </div>
-        <p style="margin:0;font-size:17px;line-height:1.65;color:var(--text-2)">Financial statement data is normalized and loaded into a relational database, so questions that need filtering, aggregation, sorting, and comparison resolve against structured facts. Narrative sections are handled by vector search. Hybrid search covers statements and footnotes together.</p>
-      </div>
-
-      <div class="card-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4)">
-        <article class="card" style="padding:var(--space-8);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--panel)">
-          <h3 style="margin:0 0 var(--space-4);font-family:var(--font-mono);font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">RDB</h3>
-          <p style="margin:0;font-size:16px;line-height:1.6;color:var(--text)">Filtering, aggregation, sorting, and comparison over normalized <span style="font-family:var(--font-mono);font-size:14px">financialstatement.json</span>.</p>
-          <p style="margin:var(--space-3) 0 0;font-size:15px;line-height:1.6;color:var(--text-2)">Questions with a complete answer set — every match, not a sample.</p>
-        </article>
-        <article class="card" style="padding:var(--space-8);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--panel)">
-          <h3 style="margin:0 0 var(--space-4);font-family:var(--font-mono);font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Vector search</h3>
-          <p style="margin:0;font-size:16px;line-height:1.6;color:var(--text)">Narrative sections of the filing.</p>
-          <p style="margin:var(--space-3) 0 0;font-size:15px;line-height:1.6;color:var(--text-2)">Risk factors, business description, management discussion.</p>
-        </article>
-        <article class="card" style="padding:var(--space-8);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--panel)">
-          <h3 style="margin:0 0 var(--space-4);font-family:var(--font-mono);font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Lucy Intelligence</h3>
-          <p style="margin:0;font-size:16px;line-height:1.6;color:var(--text)">Interpretation, assessment, and forward-looking context.</p>
-          <p style="margin:var(--space-3) 0 0;font-size:15px;line-height:1.6;color:var(--text-2)">Layered on top of retrieved filing data, not generated in place of it.</p>
-        </article>
-      </div>
-
-      <div class="contrast" style="margin-top:var(--space-8);padding:var(--space-6) var(--space-8) var(--space-8);border:1px solid var(--border-strong);border-radius:var(--radius-md)">
-        <p style="margin:0 0 var(--space-6);padding-bottom:var(--space-5);border-bottom:1px solid var(--border);max-width:820px;font-family:var(--font-mono);font-size:17px;line-height:1.6;color:var(--text)">&ldquo;Are there cheaper alternatives to VOO with similarly low expense ratios and comparable assets under management?&rdquo;</p>
-
-        <div class="compare-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-10);align-items:start">
-          <div>
-            <p style="margin:0 0 var(--space-4);padding-bottom:var(--space-3);border-bottom:1px solid var(--border-strong);font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)">Similarity search</p>
-            <ul style="list-style:none;margin:0;padding:0">
-          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text-2)">Returns passages that read like the question.</li>
-          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text-2)">A near-match is indistinguishable from a match.</li>
-          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text-2)">One omission makes the answer wrong.</li>
-            </ul>
-          </div>
-          <div>
-            <p style="margin:0 0 var(--space-4);padding-bottom:var(--space-3);border-bottom:1px solid var(--border-strong);font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)">Structured retrieval</p>
-            <ul style="list-style:none;margin:0;padding:0">
-          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text)">Filters, aggregates, and sorts across filings that match the conditions.</li>
-          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text)">Completeness is a property of the query, not of the ranking.</li>
-          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text)">Every filing that matches is returned, not the closest few.</li>
-            </ul>
-          </div>
-        </div>
-
-        <p style="margin:var(--space-6) 0 0;padding-top:var(--space-5);border-top:1px solid var(--border);font-family:var(--font-mono);font-size:13px;line-height:1.6;color:var(--text-3)">Also: Show all US large-cap ETFs with expense ratios below 0.10%.</p>
-        <p style="margin:var(--space-5) 0 0;font-size:16px;line-height:1.6;color:var(--text-2)">These describe what the data model supports. Scope and availability are confirmed per dataset.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="coverage dark" id="coverage">
-    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-24) var(--space-12) var(--space-12)">
-      <div class="section-head-split" style="display:grid;grid-template-columns:minmax(320px,1fr) minmax(320px,1fr);gap:var(--space-16);align-items:end;margin-bottom:var(--space-12)">
-        <div>
-          <p class="eyebrow" style="margin:0 0 var(--space-5);font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">Coverage</p>
-          <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Ten years of SEC filings, preprocessed at a granular level.</h2>
+          <p class="eyebrow" style="margin:0 0 20px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">Coverage</p>
+          <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">What Lucy preprocesses.</h2>
+          <p style="margin:var(--space-4) 0 0;font-family:var(--font-mono);font-size:15px;line-height:1.6;color:var(--text-2)">Ten years of SEC filings, at item level — one preprocessed filing dataset, kept current in real time as new filings post.</p>
         </div>
       </div>
 
@@ -477,24 +421,249 @@ a:hover{color:#8f3a23;text-decoration:underline}
         </div>
       </div>
 
-      <p style="margin:var(--space-6) 0 0;padding-top:var(--space-5);border-top:1px solid var(--border);font-size:16px;line-height:1.6;color:var(--text-2)">XBRL search covers both SEC and DART.</p>
+      <p style="margin:var(--space-6) 0 0;padding-top:var(--space-5);border-top:1px solid var(--border);font-size:16px;line-height:1.6;color:var(--text-2)">XBRL search covers both SEC and DART. Coverage is verifiable in the playground — filter by company and filing type and read the chunks yourself.</p>
     </div>
   </section>
 
-  <section class="integration" id="integration" style="border-top:1px solid var(--border)">
+  <section class="what-lucy-returns dark" id="what-lucy-returns">
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-24) var(--space-12)">
+      <p class="eyebrow" style="margin:0 0 20px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">What Lucy returns</p>
+      <div class="section-head-split" style="display:grid;grid-template-columns:1fr 1fr;column-gap:96px;align-items:start;margin-bottom:64px">
+        <h2 style="margin:0;font-size:36px;line-height:1.14;letter-spacing:-.025em;font-weight:700">Chunks, tables, facts, and references. Not a paragraph.</h2>
+        <p style="margin:0;max-width:520px;font-size:16px;line-height:1.65;color:var(--text-2)">A retrieval call returns the filing material itself — table, text, XBRL, metadata, and graph relationships, with pointers back to the source.</p>
+      </div>
+
+      <div class="returns-grid" style="display:grid;grid-template-columns:1fr 1fr;column-gap:64px;row-gap:28px">
+        <div class="returns-entry" style="border-top:.5px solid var(--border);padding-top:12px">
+          <p style="margin:0;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#e28a68;font-weight:600">Text chunks</p>
+          <p style="margin:6px 0 0;font-size:15px;line-height:1.55;color:var(--text-2)">Item-level, with the filing section they came from.</p>
+        </div>
+        <div class="returns-entry" style="border-top:.5px solid var(--border);padding-top:12px">
+          <p style="margin:0;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#e28a68;font-weight:600">Table JSON</p>
+          <p style="margin:6px 0 0;font-size:15px;line-height:1.55;color:var(--text-2)">Row and column headers preserved as structure.</p>
+        </div>
+        <div class="returns-entry" style="border-top:.5px solid var(--border);padding-top:12px">
+          <p style="margin:0;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#e28a68;font-weight:600">XBRL facts</p>
+          <p style="margin:6px 0 0;font-size:15px;line-height:1.55;color:var(--text-2)">Figures carrying the tags they were filed against.</p>
+        </div>
+        <div class="returns-entry" style="border-top:.5px solid var(--border);padding-top:12px">
+          <p style="margin:0;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#e28a68;font-weight:600">Relevance scores</p>
+          <p style="margin:6px 0 0;font-size:15px;line-height:1.55;color:var(--text-2)">Per-chunk retrieval scores, returned with the chunk.</p>
+        </div>
+        <div class="returns-entry" style="border-top:.5px solid var(--border);padding-top:12px">
+          <p style="margin:0;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#e28a68;font-weight:600">Metadata</p>
+          <p style="margin:6px 0 0;font-size:15px;line-height:1.55;color:var(--text-2)">Company, ticker, form type, report date.</p>
+        </div>
+        <div class="returns-entry" style="border-top:.5px solid var(--border);padding-top:12px">
+          <p style="margin:0;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#e28a68;font-weight:600">Graph links</p>
+          <p style="margin:6px 0 0;font-size:15px;line-height:1.55;color:var(--text-2)">Reference links to the footnotes, exhibits, and filings a chunk cites.</p>
+        </div>
+        <div class="returns-entry" style="border-top:.5px solid var(--border);padding-top:12px">
+          <p style="margin:0;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#e28a68;font-weight:600">Filing reference</p>
+          <p style="margin:6px 0 0;font-size:15px;line-height:1.55;color:var(--text-2)">Accession number resolving to the original document.</p>
+        </div>
+        <div class="returns-teaser" style="border-top:.5px solid var(--border);padding-top:12px">
+          <p style="margin:0;font-family:var(--font-mono);font-size:13px;line-height:1.5;color:#e28a68;font-weight:600">{ "contexts": [...], "total_chunks": 20 }</p>
+          <p style="margin:6px 0 0;font-size:12px;line-height:1.5;color:var(--text-3)">Full response below ↓</p>
+        </div>
+      </div>
+
+      <div class="split" style="display:grid;grid-template-columns:1fr 1fr;column-gap:64px;align-items:start;margin-top:72px">
+        <pre class="code-block" style="margin:0;padding:var(--space-8);border:1px solid var(--border-strong);border-radius:var(--radius-md);font-family:var(--font-mono);font-size:13.5px;line-height:1.7;color:var(--text-2);overflow-x:auto;white-space:pre">{
+  <span style="color:var(--text)">"contexts"</span>: [
+    { <span style="color:var(--text)">"chunk_id"</span>: <span style="color:var(--accent)">"0001045810-26-000021::item_1a::001"</span>,
+      <span style="color:var(--text)">"score"</span>: <span style="color:var(--accent)">0.91</span>,
+      <span style="color:var(--text)">"collection"</span>: <span style="color:var(--accent)">"10K"</span>,
+      <span style="color:var(--text)">"source_ref"</span>: <span style="color:var(--accent)">"0001045810-26-000021"</span>,
+      <span style="color:var(--text)">"text"</span>: <span style="color:var(--accent)">"..."</span> }
+  ],
+  <span style="color:var(--text)">"thread_id"</span>: <span style="color:var(--accent)">"ws-a3f12c"</span>,
+  <span style="color:var(--text)">"total_chunks"</span>: <span style="color:var(--accent)">20</span>
+}</pre>
+        <p style="margin:0;font-size:28px;line-height:1.3;letter-spacing:-.025em;font-weight:600;color:var(--text)">Generation-ready context. Your LLM composes the final answer.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="what-lucy-retrieves" id="what-lucy-retrieves">
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-24) var(--space-12)">
+      <p class="eyebrow" style="margin:0 0 20px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">What Lucy retrieves</p>
+      <div class="section-head-split" style="display:grid;grid-template-columns:1fr 1fr;column-gap:96px;align-items:start;margin-bottom:64px">
+        <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Two kinds of retrieval, one surface.</h2>
+        <p style="margin:0;max-width:520px;font-size:16px;line-height:1.65;color:var(--text-2)">One Vector &amp; Graph RAG dataset: financial statement data is normalized and loaded into a relational database, so retrieval that needs filtering, aggregation, sorting, and comparison resolves against structured facts. Narrative sections are handled by vector search. Hybrid search covers statements and footnotes together, so one call returns graph/vector retrieval context.</p>
+      </div>
+
+      <div class="fork-diagram" style="max-width:900px;margin:48px auto 56px">
+        <div style="display:flex;justify-content:center">
+          <div style="display:flex;align-items:center;justify-content:center;width:200px;height:38px;border:1px dashed var(--border-strong);border-radius:4px;font-family:var(--font-mono);font-size:13px;color:var(--text-2)">one retrieval call</div>
+        </div>
+        <div class="fork-split" aria-hidden="true" style="position:relative;width:100%;height:44px">
+          <span style="position:absolute;left:50%;top:0;width:1.5px;height:14px;margin-left:-.75px;background:var(--accent)"></span>
+          <span class="fork-bar" style="position:absolute;left:23%;right:23%;top:14px;height:1.5px;background:var(--accent)"></span>
+          <span aria-hidden="true" style="position:absolute;left:23%;top:14px;width:1.5px;height:26px;margin-left:-.75px;background:var(--accent)"></span>
+          <span aria-hidden="true" style="position:absolute;left:23%;top:33px;width:8px;height:8px;margin-left:-4.75px;border-right:1.5px solid var(--accent);border-bottom:1.5px solid var(--accent);transform:rotate(45deg)"></span>
+          <span aria-hidden="true" style="position:absolute;left:77%;top:14px;width:1.5px;height:26px;margin-left:-.75px;background:var(--accent)"></span>
+          <span aria-hidden="true" style="position:absolute;left:77%;top:33px;width:8px;height:8px;margin-left:-4.75px;border-right:1.5px solid var(--accent);border-bottom:1.5px solid var(--accent);transform:rotate(45deg)"></span>
+        </div>
+        <div class="fork-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:8%">
+          <div style="padding:24px;background:var(--panel);border:1.5px solid var(--accent);border-radius:8px">
+            <p style="margin:0 0 8px;font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">RDB</p>
+            <p style="margin:0;font-size:13px;line-height:1.6;color:var(--text)">Filtering, aggregation, sorting, and comparison over normalized <span style="font-family:var(--font-mono);font-size:12px">financialstatement.json</span>. Every match, not a sample.</p>
+          </div>
+          <div style="padding:24px;background:var(--panel);border:1.5px solid var(--accent);border-radius:8px">
+            <p style="margin:0 0 8px;font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">Vector search</p>
+            <p style="margin:0;font-size:13px;line-height:1.6;color:var(--text)">Narrative sections of the filing — risk factors, business description, management discussion.</p>
+          </div>
+        </div>
+        <div class="fork-underconn" aria-hidden="true" style="position:relative;width:100%;height:20px">
+          <span style="position:absolute;left:23%;top:0;width:1px;height:20px;background:rgba(176,73,47,.4)"></span>
+          <span style="position:absolute;left:77%;top:0;width:1px;height:20px;background:rgba(176,73,47,.4)"></span>
+        </div>
+        <div style="padding:20px;border:1px dashed rgba(176,73,47,.4);border-radius:6px">
+          <p style="margin:0 0 10px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:rgba(176,73,47,.8);font-weight:600">Layered on both</p>
+          <div class="fork-layer">
+            <p style="margin:0;font-size:13px;line-height:1.6;color:var(--text-2)">+ Graph — reference links between filings and the documents they cite: footnotes, exhibits, and cross-filing references.</p>
+          </div>
+        </div>
+        <p style="margin:var(--space-5) 0 0;font-size:13px;line-height:1.6;color:var(--text-3)">Lucy Intelligence — interpretation, assessment, and forward-looking context — is a separate product, not part of the retrieval layer. Ask us if you need it.</p>
+      </div>
+
+      <div class="contrast" style="margin-top:0;padding:var(--space-6) var(--space-8) var(--space-8);border:1px solid var(--border-strong);border-radius:var(--radius-md)">
+        <p style="margin:0 0 var(--space-6);max-width:820px;margin-left:auto;margin-right:auto;text-align:center;font-family:var(--font-mono);font-size:20px;line-height:1.5;color:var(--text);font-weight:600">&ldquo;Are there cheaper alternatives to VOO with similarly low expense ratios and comparable assets under management?&rdquo;</p>
+
+        <div class="compare-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-10);align-items:start">
+          <div>
+            <p style="margin:0 0 var(--space-4);padding-top:var(--space-3);border-top:.5px solid var(--border);font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);font-weight:600">Similarity search</p>
+            <ul style="list-style:none;margin:0;padding:0">
+          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text-2)">Returns passages that read like the question.</li>
+          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text-2)">A near-match is indistinguishable from a match.</li>
+          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text-2)">One omission makes the answer wrong.</li>
+            </ul>
+          </div>
+          <div>
+            <p style="margin:0 0 var(--space-4);padding-top:var(--space-3);border-top:2px solid var(--accent);font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600">Structured retrieval</p>
+            <ul style="list-style:none;margin:0;padding:0">
+          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text)">Filters, aggregates, and sorts across filings that match the conditions.</li>
+          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text)">Completeness is a property of the query, not of the ranking.</li>
+          <li style="padding:var(--space-4) 0;border-bottom:1px solid var(--border);font-size:16px;line-height:1.55;color:var(--text)">Every filing that matches is returned, not the closest few.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p style="margin:var(--space-6) 0 0;text-align:center;font-family:var(--font-mono);font-size:13px;line-height:1.6;color:var(--text-3)">Also: Show all US large-cap ETFs with expense ratios below 0.10%.</p>
+        <p style="margin:var(--space-5) 0 0;text-align:center;font-size:16px;font-weight:600;line-height:1.6;color:var(--text-2)">These describe what the data model supports. Scope and availability are confirmed per dataset.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-teams-use-it" id="how-teams-use-it">
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-16) var(--space-12) var(--space-30)">
+      <div class="section-head-split" style="display:grid;grid-template-columns:minmax(320px,1fr) minmax(320px,1fr);gap:var(--space-16);align-items:start">
+        <div>
+          <p class="eyebrow" style="margin:0 0 20px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">How teams use it</p>
+          <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Retrieval substrate<br>inside your product.</h2>
+          <p style="margin:32px 0 0;font-size:17px;line-height:1.6"><span style="font-weight:400;color:var(--text-2)">We do not replace Bloomberg, FactSet,<br>or financial AI chatbots. </span><span style="font-weight:600;color:var(--text)">We supply the filing-grade<br>data layer they need to answer accurately.</span></p>
+          <p style="margin:20px 0 0;font-size:15px;line-height:1.65;color:var(--text-2)">Whatever the product on top — an assistant, a search tool,<br>an internal copilot — the structured SEC and DART evidence<br>underneath it comes from Lucy. Before your LLM answers, Lucy<br>retrieves the evidence.</p>
+        </div>
+        <ul class="teams-list" style="list-style:none;margin:46px 0 0;padding:0;max-width:520px;border-top:.5px solid var(--border)">
+          <li style="display:flex;align-items:baseline;gap:16px;padding:14px 0 22px;border-bottom:.5px solid var(--border)"><span style="flex:0 0 auto;font-family:var(--font-mono);font-size:15px;color:var(--accent)">01</span><span style="font-family:var(--font-mono);font-size:20px;font-weight:600;line-height:1.5;color:var(--text)">AI assistants and answer engines</span></li>
+          <li style="display:flex;align-items:baseline;gap:16px;padding:22px 0 22px;border-bottom:.5px solid var(--border)"><span style="flex:0 0 auto;font-family:var(--font-mono);font-size:15px;color:var(--accent)">02</span><span style="font-family:var(--font-mono);font-size:20px;font-weight:600;line-height:1.5;color:var(--text)">Financial data platforms</span></li>
+          <li style="display:flex;align-items:baseline;gap:16px;padding:22px 0 22px;border-bottom:.5px solid var(--border)"><span style="flex:0 0 auto;font-family:var(--font-mono);font-size:15px;color:var(--accent)">03</span><span style="font-family:var(--font-mono);font-size:20px;font-weight:600;line-height:1.5;color:var(--text)">Investment research tools</span></li>
+          <li style="display:flex;align-items:baseline;gap:16px;padding:22px 0 22px;border-bottom:.5px solid var(--border)"><span style="flex:0 0 auto;font-family:var(--font-mono);font-size:15px;color:var(--accent)">04</span><span style="font-family:var(--font-mono);font-size:20px;font-weight:600;line-height:1.5;color:var(--text)">Agent frameworks and internal copilots</span></li>
+          <li style="display:flex;align-items:baseline;gap:16px;padding:22px 0 22px;border-bottom:.5px solid var(--border)"><span style="flex:0 0 auto;font-family:var(--font-mono);font-size:15px;color:var(--accent)">05</span><span style="font-family:var(--font-mono);font-size:20px;font-weight:600;line-height:1.5;color:var(--text)">Enterprise research and IR systems</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="inspect dark" id="inspect">
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-30) var(--space-12)">
+      <p class="eyebrow" style="margin:0 0 20px;text-align:center;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">Inspect retrieval quality</p>
+      <h2 style="margin:0 0 64px;font-size:44px;line-height:1.1;letter-spacing:-.03em;font-weight:700;text-align:center">See what your LLM would receive.</h2>
+
+      <div class="inspect-media-row" style="display:grid;grid-template-columns:1.2fr 1fr;column-gap:64px;align-items:center;margin-bottom:96px">
+      <figure class="shot" style="width:100%;margin:0">
+        <div class="shot-frame" style="border-color:var(--border-strong);box-shadow:none">
+          <div class="shot-bar" style="border-bottom-color:var(--border)">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span style="margin-left:var(--space-3);font-family:var(--font-mono);font-size:13px;color:var(--text-3)">rag-playground.lucydata.ai</span>
+          </div>
+          <div class="shot-media" style="position:relative;width:100%;aspect-ratio:1904/1080;background:var(--panel)">
+            <video ref="{{ heroVideoRef }}" src="./assets/hero.mp4" poster="./assets/hero-3panel.png" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" preload="metadata" aria-label="Lucy playground: a question is asked, the pipeline runs, chunks are retrieved, and the answer is scored" style="display:block;width:100%;height:100%;object-fit:cover"></video>
+          </div>
+        </div>
+        <figcaption style="margin-top:var(--space-4);text-align:center;font-family:var(--font-mono);font-size:13px;line-height:1.5;color:var(--text-3)">One query, start to finish — pipeline, trace, answer, and score.</figcaption>
+      </figure>
+      <p style="margin:0;font-size:16px;line-height:1.7;color:var(--text-2)">The playground exposes the retrieval itself — the stages that ran, every chunk that came back, the passage each statement rests on, and a score on whether the material actually supports it. It generates an answer so you can judge whether the retrieved material held it up. That generation is the test, not the product. What follows is a single query, end to end.</p>
+      </div>
+
+      <ol class="step-list" style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 64px 1fr 64px 1fr;gap:0">
+        <li class="step-card" style="padding:var(--space-10) 0 var(--space-8)">
+          <figure class="shot" style="margin:0 0 var(--space-6)">
+            <div class="shot-frame" style="border-color:rgba(237,232,222,.22);box-shadow:none">
+              <div class="shot-media" style="position:relative;width:100%;aspect-ratio:4/3">
+                <img src="./assets/pipeline-detail.png" alt="Pipeline graph for one query: Planner routing to Retrieval, retrieved chunks, then Answer." style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center" />
+              </div>
+            </div>
+          </figure>
+          <span style="font-family:var(--font-num);font-size:15px;font-weight:600;letter-spacing:.06em;color:var(--accent)">01</span>
+          <h3 style="margin:var(--space-4) 0 var(--space-4);font-size:22px;font-weight:600;letter-spacing:-.02em">The path</h3>
+          <p style="margin:0;padding-right:var(--space-4);font-size:16px;line-height:1.65;color:var(--text-2)">Pipeline Graph and Trace Log show the route the query took and every chunk that was retrieved.</p>
+        </li>
+        <li aria-hidden="true" style="justify-self:center;width:1px;padding:var(--space-10) 0 var(--space-8);background:rgba(237,232,222,.12);background-clip:content-box"></li>
+        <li class="step-card" style="padding:var(--space-10) 0 var(--space-8)">
+          <figure class="shot" style="margin:0 0 var(--space-6)">
+            <div class="shot-frame" style="border-color:rgba(237,232,222,.22);box-shadow:none">
+              <div class="shot-media" style="position:relative;width:100%;aspect-ratio:4/3">
+                <img src="./assets/chunk-highlight.png" alt="Retrieved chunks from the NVDA 10-K, each labeled with company, ticker, form type, and report date, with the cited passages marked." style="display:block;width:100%;height:100%;object-fit:cover;object-position:top">
+              </div>
+            </div>
+          </figure>
+          <span style="font-family:var(--font-num);font-size:15px;font-weight:600;letter-spacing:.06em;color:var(--accent)">02</span>
+          <h3 style="margin:var(--space-4) 0 var(--space-4);font-size:22px;font-weight:600;letter-spacing:-.02em">The source</h3>
+          <p style="margin:0;padding-right:var(--space-4);font-size:16px;line-height:1.65;color:var(--text-2)">The passage an answer rests on is highlighted where it sits in the filing. No opening EDGAR, no downloading anything.</p>
+        </li>
+        <li aria-hidden="true" style="justify-self:center;width:1px;padding:var(--space-10) 0 var(--space-8);background:rgba(237,232,222,.12);background-clip:content-box"></li>
+        <li class="step-card" style="padding:var(--space-10) 0 var(--space-8)">
+          <figure class="shot" style="margin:0 0 var(--space-6)">
+            <div class="shot-frame" style="border-color:rgba(237,232,222,.22);box-shadow:none">
+              <div class="shot-media" style="position:relative;width:100%;aspect-ratio:4/3">
+                <img src="./assets/judge-metrics.png" alt="Judge output: Relevance 1.00 and Groundedness 1.00, each with the reasoning behind the score." style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left" />
+              </div>
+            </div>
+          </figure>
+          <span style="font-family:var(--font-num);font-size:15px;font-weight:600;letter-spacing:.06em;color:var(--accent)">03</span>
+          <h3 style="margin:var(--space-4) 0 var(--space-4);font-size:22px;font-weight:600;letter-spacing:-.02em">The score</h3>
+          <p style="margin:0;padding-right:var(--space-4);font-size:16px;line-height:1.65;color:var(--text-2)">The playground generates one answer only so it can be scored against the retrieved chunks — three metrics, in real time.</p>
+          <ul style="list-style:none;margin:var(--space-5) 0 0;padding:0;display:flex;flex-direction:column;gap:12px">
+            <li style="display:flex;align-items:baseline;gap:8px;padding:0 0 12px;border-bottom:.5px solid var(--border);font-size:13px;line-height:1.5;color:var(--text-2)"><span style="flex:0 0 auto;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Relevance:</span><span>How well the answer corresponds to the question.</span></li>
+            <li style="display:flex;align-items:baseline;gap:8px;padding:0 0 12px;border-bottom:.5px solid var(--border);font-size:13px;line-height:1.5;color:var(--text-2)"><span style="flex:0 0 auto;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Retrieval Relevance:</span><span>How well the retrieved chunks correspond to it.</span></li>
+            <li style="display:flex;align-items:baseline;gap:8px;padding:0;font-size:13px;line-height:1.5;color:var(--text-2)"><span style="flex:0 0 auto;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Groundedness:</span><span>Factually supported by the source context; in effect, hallucination detection.</span></li>
+          </ul>
+        </li>
+      </ol>
+
+      <div class="inspect-foot" style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-8);margin-top:96px">
+        <p style="margin:0;max-width:640px;font-size:16px;line-height:1.6;color:var(--text-2)">Browse companies, filings, item-level chunks, table chunks, XBRL facts, and source references — filtered by filing item, as text or table units. Teams use it to assemble evaluation sets against real filing data.</p>
+        <a href="https://rag-playground.lucydata.ai" class="btn btn-secondary" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:52px;padding:0 var(--space-8);font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border-btn);border-radius:var(--btn-radius)" style-hover="background:rgba(237,232,222,.07)">Inspect Chunks in Playground</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="integration" id="integration">
     <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-24) var(--space-12) var(--space-30)">
-      <div style="max-width:820px;margin-bottom:var(--space-12)">
-        <p class="eyebrow" style="margin:0 0 var(--space-5);font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">Integration</p>
-        <h2 style="margin:0;font-size:44px;line-height:1.1;letter-spacing:-.03em;font-weight:700">The same retrieval, called from your own stack.</h2>
+      <p class="eyebrow" style="margin:0 0 20px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">Integration</p>
+      <div class="section-head-split" style="display:grid;grid-template-columns:1fr 1fr;column-gap:96px;align-items:start;margin-bottom:64px">
+        <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">The same retrieval,<br>called from your own stack.</h2>
+        <p style="margin:0;max-width:520px;font-size:16px;line-height:1.65;color:var(--text-2)">Lucy returns chunks, scores, tables, XBRL facts, and filing references. Your LLM composes the final answer.</p>
       </div>
 
       <div class="stack-cards" style="display:flex;flex-direction:column;gap:var(--space-4)">
-        <article class="card card-wide" style="display:flex;gap:var(--space-10);padding:var(--space-8) var(--space-10);border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--panel)">
-          <h3 style="flex:0 0 150px;margin:0;font-family:var(--font-mono);font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">MCP</h3>
-          <div style="flex:1 1 0;min-width:0">
+        <article class="card" style="padding:var(--space-8) var(--space-10);border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--panel)">
+          <h3 style="margin:0 0 var(--space-5);font-family:var(--font-mono);font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">MCP</h3>
+          <div style="min-width:0">
             <p style="margin:0;max-width:820px;font-size:16px;line-height:1.65;color:var(--text)">MCP connects Lucy's filing search to any MCP-capable host. <span style="font-family:var(--font-mono);font-size:14px">rag_context(question, thread_id?)</span> returns roughly 20 source chunks with scores and filing references, and the trace arrives as progress notifications while the call runs. Pass the returned <span style="font-family:var(--font-mono);font-size:14px">thread_id</span> on the next call for follow-ups.</p>
-            <p style="margin:var(--space-5) 0 0;padding-top:var(--space-5);border-top:1px solid var(--border);max-width:820px;font-size:15px;line-height:1.6;color:var(--text-2)">The MCP endpoint returns chunks only — the calling model composes the answer.</p>
-
+            <p style="margin:var(--space-4) 0 0;font-size:15px;line-height:1.6;color:var(--text-2)">The MCP endpoint returns chunks only — the calling model composes the answer.</p>
             <p style="margin:var(--space-6) 0 var(--space-4);font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)">Supported hosts</p>
             <div class="host-tier" style="display:flex;align-items:baseline;gap:var(--space-4);flex-wrap:wrap">
               <p style="flex:0 0 72px;margin:0;font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)">API key</p>
@@ -515,27 +684,27 @@ a:hover{color:#8f3a23;text-decoration:underline}
             <p style="margin:var(--space-5) 0 0;font-size:15px;line-height:1.6;color:var(--text-2)">…and any other MCP-capable host.</p>
           </div>
         </article>
-
-        <article class="card card-wide" style="display:flex;gap:var(--space-10);padding:var(--space-8) var(--space-10);border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--panel)">
-          <h3 style="flex:0 0 150px;margin:0;font-family:var(--font-mono);font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">API</h3>
-          <div style="flex:1 1 0;min-width:0">
+        <article class="card" style="padding:var(--space-8) var(--space-10);border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--panel)">
+          <h3 style="margin:0 0 var(--space-5);font-family:var(--font-mono);font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">API</h3>
+          <div style="min-width:0">
             <p style="margin:0;max-width:820px;font-size:16px;line-height:1.65;color:var(--text)">Retrieve chunks and traces from your own orchestration layer, on your own schedule.</p>
-            <p style="margin:var(--space-4) 0 0;font-family:var(--font-mono);font-size:13px;line-height:1.6;color:var(--text-3)">Endpoint shape and auth model [TO CONFIRM]</p>
           </div>
         </article>
+
       </div>
 
-      <p style="margin:var(--space-10) 0 0;padding-top:var(--space-5);border-top:1px solid var(--border);max-width:760px;font-size:16px;line-height:1.6;color:var(--text-2)">Register one endpoint URL and a Bearer API key. <span style="font-family:var(--font-mono);font-size:14px">stdio</span> for local clients, streamable HTTP for remote. ChatGPT connects over OAuth instead.</p>
+      <p style="margin:var(--space-10) 0 0;font-size:16px;line-height:1.6;color:var(--text-2)">Register one endpoint URL and a Bearer API key. <span style="font-family:var(--font-mono);font-size:14px">stdio</span> for local clients, streamable HTTP for remote. ChatGPT connects over OAuth instead.</p>
     </div>
   </section>
 
   <section class="closing dark">
     <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-30) var(--space-12);display:flex;flex-direction:column;align-items:center;text-align:center">
       <h2 style="margin:0;max-width:880px;font-size:52px;line-height:1.08;letter-spacing:-.035em;font-weight:700">Tell us what you need covered.</h2>
-      <p style="margin:var(--space-6) 0 0;max-width:620px;font-size:18px;line-height:1.65;color:var(--text-2)">Access is granted per dataset. Send the markets and filing types you need and we will scope it. The playground is open if you want to check the output first.</p>
-      <div class="cta-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-3);margin-top:var(--space-10)">
-        <a href="https://rag-playground.lucydata.ai" class="btn btn-secondary" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:52px;padding:0 var(--space-8);font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border-btn);border-radius:var(--btn-radius)" style-hover="background:rgba(237,232,222,.07)">Open the playground</a>
+      <p style="margin:var(--space-6) 0 0;max-width:620px;font-size:18px;line-height:1.65;color:var(--text-2)">Access is granted per dataset. Send the markets and filing types you need and we will scope it. The playground is open if you want to inspect the output first.</p>
+      <div class="cta-row" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:var(--space-4);margin-top:var(--space-10)">
         <a href="/request-access" class="btn btn-primary" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:52px;padding:0 var(--space-8);font-size:16px;font-weight:500;background:#ede8de;color:#1c1815;border-radius:var(--btn-radius)" style-hover="opacity:.88">Request dataset access</a>
+        <a href="https://rag-playground.lucydata.ai" class="btn btn-secondary" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:52px;padding:0 var(--space-8);font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border-btn);border-radius:var(--btn-radius)" style-hover="background:rgba(237,232,222,.07)">Inspect Chunks in Playground</a>
+        <a href="#integration" class="btn btn-tertiary" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:52px;padding:0 var(--space-8);font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border-btn-quiet);border-radius:var(--btn-radius)" style-hover="background:rgba(237,232,222,.07)">View API / MCP docs</a>
       </div>
       <p style="margin:var(--space-8) 0 0;font-family:var(--font-mono);font-size:13px;line-height:1.7;color:var(--text-3)">Company · Intended use · Expected volume</p>
     </div>
@@ -567,7 +736,7 @@ a:hover{color:#8f3a23;text-decoration:underline}
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;containerWidth&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1200,&quot;min&quot;:1120,&quot;max&quot;:1280,&quot;step&quot;:20,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;showMetaRow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBrowserChrome&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;containerWidth&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1200,&quot;min&quot;:1120,&quot;max&quot;:1280,&quot;step&quot;:20,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;showMetaRow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
 class Component extends DCLogic {
   state = { navOpen: false };
   heroVideoRef = React.createRef();
@@ -581,12 +750,22 @@ class Component extends DCLogic {
   componentDidMount() {
     this.syncTokens();
     document.addEventListener('keydown', this.onKeyDown);
-    // Respect reduced-motion: hold the poster frame instead of looping.
     const v = this.heroVideoRef.current;
-    if (v && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!v) return;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      // Hold the poster frame instead of looping.
       v.autoplay = false;
       v.pause();
+      return;
     }
+    // Chrome reads autoplay eligibility from the muted ATTRIBUTE at parse time; React sets it
+    // as a property only, so the element is judged unmuted and refused. Set it, then play.
+    v.setAttribute('muted', '');
+    v.muted = true;
+    const start = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+    if (v.readyState >= 2) start();
+    else v.addEventListener('loadeddata', start, { once: true });
   }
   componentWillUnmount() { document.removeEventListener('keydown', this.onKeyDown); }
   componentDidUpdate() { this.syncTokens(); }
@@ -596,8 +775,7 @@ class Component extends DCLogic {
   renderVals() {
     return {
       heroVideoRef: this.heroVideoRef,
-      showMetaRow: this.props.showMetaRow ?? true,
-      showBrowserChrome: this.props.showBrowserChrome ?? true,
+      showMetaRow: this.props.showMetaRow ?? false,
       navOpen: this.state.navOpen,
       navExpanded: this.state.navOpen ? 'true' : 'false',
       toggleNav: () => this.setState(s => ({ navOpen: !s.navOpen }), () => {
