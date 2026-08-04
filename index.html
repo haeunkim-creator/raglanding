@@ -38,7 +38,7 @@ a{color:var(--accent);text-decoration:none}
 a:hover{color:#8f3a23;text-decoration:underline}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 
-/* dark = 3 · 6 · 8 only */
+/* dark: 3, 7, 10, 12 */
 .dark{background:var(--dark);color:#ede8de;
   --text:#ede8de; --text-2:rgba(237,232,222,.74); --text-3:rgba(237,232,222,.56);
   --text-muted:rgba(237,232,222,.56);
@@ -69,8 +69,9 @@ a:hover{color:#8f3a23;text-decoration:underline}
   .nav-links{display:none!important}
   .nav-toggle{display:inline-flex}
   .hero,.section-inner,.nav-inner{padding-left:var(--space-8)!important;padding-right:var(--space-8)!important}
-  .split,.section-head-split,.compare-grid{grid-template-columns:minmax(0,1fr)!important}
+  .split,.section-head-split,.compare-grid{grid-template-columns:minmax(0,1fr)!important;row-gap:var(--space-8)!important}
   .card-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .is-grid{grid-template-columns:minmax(0,1fr)!important;row-gap:var(--space-8)}
   .stack-cards .card-grid,.integration .card-grid{grid-template-columns:minmax(0,1fr)!important}
   .fork-cards,.fork-layer{grid-template-columns:minmax(0,1fr)!important;gap:16px!important}
   .inspect-media-row{grid-template-columns:minmax(0,1fr)!important;row-gap:32px}
@@ -167,7 +168,7 @@ a:hover{color:#8f3a23;text-decoration:underline}
         <p class="eyebrow" style="margin:0 0 16px;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent)">SEC &amp; DART data infrastructure for LLM / RAG</p>
         <h1 class="hero-h1" style="margin:0;font-size:56px;line-height:1.08;letter-spacing:-.03em;font-weight:800">The source-of-truth<br><span style="color:var(--accent)">retrieval layer for financial AI.</span></h1>
         <p class="hero-claim" style="margin:14px 0 0;font-size:18px;line-height:1.4;letter-spacing:-.01em;font-weight:600;color:var(--text-2)">Lucy does not generate answers.</p>
-        <p class="hero-sub" style="margin:14px auto 0;max-width:620px;font-size:15px;line-height:1.65;color:var(--text-2)">Lucy preprocesses SEC and DART filings into structured, source-linked chunks —<br class="sub-br">and stops before generation, so your LLM answers with the right source.</p>
+        <p class="hero-sub" style="margin:14px auto 0;max-width:620px;font-size:15px;line-height:1.65;color:var(--text-2)">Lucy preprocesses SEC and DART filings into structured, source-linked chunks —<br class="sub-br">so you skip collection, parsing, and chunking, and connect any LLM you choose.</p>
         <div class="cta-row" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;margin-top:44px">
             <a href="/request-access" class="btn" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:48px;padding:0 var(--space-6);font-size:15px;font-weight:500;border-radius:6px;background:var(--dark);color:var(--light)" style-hover="opacity:.86">Request dataset access</a>
             <a href="https://rag-playground.lucydata.ai" class="btn" style="display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;height:48px;padding:0 var(--space-6);font-size:15px;font-weight:500;border-radius:6px;background:transparent;color:var(--text);border:1.5px solid var(--border-btn)" style-hover="background:rgba(42,39,35,.04)">Inspect Chunks in Playground</a>
@@ -211,8 +212,36 @@ a:hover{color:#8f3a23;text-decoration:underline}
 
   </section>
 
-  <section class="what-lucy-is-not" id="what-lucy-is-not">
-    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:96px var(--space-12) var(--space-30)">
+  <section class="what-lucy-is" id="what-lucy-is">
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:96px var(--space-12) var(--space-24)">
+      <p class="eyebrow" style="margin:0 0 16px;text-align:center;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">What Lucy is</p>
+      <h2 style="margin:0 0 14px;text-align:center;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Structured filing datasets for your product.</h2>
+      <p style="margin:0 auto var(--space-12);max-width:640px;text-align:center;font-size:16px;line-height:1.6;color:var(--text-2)">Data infrastructure and a retrieval layer in one. The collection, parsing, chunking, and preprocessing are already done.</p>
+
+      <div class="is-grid" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:64px">
+        <div style="border-top:1px solid var(--border)">
+          <p style="margin:18px 0 0;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;color:var(--accent)">01</p>
+          <p style="margin:12px 0 0;font-size:20px;line-height:1.3;letter-spacing:-.01em;font-weight:600">Data infrastructure</p>
+          <p style="margin:10px 0 0;font-size:15px;line-height:1.6;color:var(--text-2)">SEC and DART filings, preprocessed at item level and kept current as new filings post.</p>
+        </div>
+        <div style="border-top:1px solid var(--border)">
+          <p style="margin:18px 0 0;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;color:var(--accent)">02</p>
+          <p style="margin:12px 0 0;font-size:20px;line-height:1.3;letter-spacing:-.01em;font-weight:600">A retrieval layer</p>
+          <p style="margin:10px 0 0;font-size:15px;line-height:1.6;color:var(--text-2)">Chunks, scores, and filing references, returned over MCP or API.</p>
+        </div>
+        <div style="border-top:1px solid var(--border)">
+          <p style="margin:18px 0 0;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;color:var(--accent)">03</p>
+          <p style="margin:12px 0 0;font-size:20px;line-height:1.3;letter-spacing:-.01em;font-weight:600">Deep coverage</p>
+          <p style="margin:10px 0 0;font-size:15px;line-height:1.6;color:var(--text-2)">The fund and ETF filings most providers skip, alongside corporate and ownership forms — including foreign issuers filing with the SEC.</p>
+        </div>
+      </div>
+
+      <p style="margin:var(--space-12) auto 0;max-width:720px;text-align:center;font-size:19px;line-height:1.5;letter-spacing:-.01em;font-weight:600;color:var(--text)">Connect any LLM — commercial or open-source — and it answers from the filing text.</p>
+    </div>
+  </section>
+
+  <section class="what-lucy-is-not dark" id="what-lucy-is-not">
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-24) var(--space-12)">
       <p class="eyebrow" style="margin:0 0 16px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">What Lucy is not</p>
       <h2 style="margin:0 0 14px;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Lucy is upstream of all four.</h2>
       <p style="margin:0 0 48px;font-size:16px;line-height:1.6;color:var(--text-2)">It supplies the filing evidence they answer from.</p>
@@ -227,18 +256,18 @@ a:hover{color:#8f3a23;text-decoration:underline}
     </div>
   </section>
 
-  <section class="problem dark" id="problem">
+  <section class="problem" id="problem" style="background:#f3efe7">
     <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-24) var(--space-12)">
       <p class="eyebrow" style="margin:0 0 20px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">The problem</p>
-      <div class="section-head-split" style="display:grid;grid-template-columns:1fr 1fr;column-gap:96px;align-items:start;margin-bottom:64px">
-        <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Most financial RAG failure starts before retrieval.</h2>
-        <p style="margin:0;max-width:520px;font-size:16px;line-height:1.65;color:var(--text-2)">A model reads a filing, flattens the tables, loses the footnote that qualified the number, and produces a confident paragraph. The output looks right. Nobody downstream can check it, and in financial work an unverifiable answer is not a usable one. The failure happened upstream, in how the document was read.</p>
+      <div>
+        <h2 style="margin:0;max-width:900px;font-size:44px;line-height:1.14;letter-spacing:-.03em;font-weight:700">Most financial RAG failure starts before retrieval.</h2>
+        <p style="margin:var(--space-6) 0 0;max-width:720px;font-size:17px;line-height:1.7;color:var(--text-2)">A model reads a filing, flattens the tables, loses the footnote that qualified the number, and produces a confident paragraph. The output looks right. Nobody downstream can check it, and in financial work an unverifiable answer is not a usable one. The failure happened upstream, in how the document was read.</p>
       </div>
     </div>
   </section>
 
   <section class="why-it-works" id="why-it-works">
-    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-30) var(--space-12) var(--space-16)">
+    <div class="section-inner" style="max-width:var(--container);margin:0 auto;padding:var(--space-24) var(--space-12) var(--space-16)">
       <p class="eyebrow" style="margin:0 0 20px;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)">Why it works</p>
       <div class="section-head-split" style="display:grid;grid-template-columns:1fr 1fr;column-gap:96px;align-items:start;margin-bottom:64px">
         <h2 style="margin:0;font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:700">Preprocessing determines retrieval quality.</h2>
